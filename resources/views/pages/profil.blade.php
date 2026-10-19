@@ -19,7 +19,7 @@
                     @endforeach
                 </div>
             </div>
-            <img src="{{ $profil['tentang']['gambar'] }}" alt="Kantor PT Solusi Koneksi"
+            <img src="{{ asset($profil['tentang']['gambar']) }}" alt="Kantor PT Solusi Koneksi"
                  class="h-80 w-full rounded-2xl object-cover shadow-lg">
         </div>
     </section>

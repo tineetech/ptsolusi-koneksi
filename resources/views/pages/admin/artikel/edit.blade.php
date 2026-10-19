@@ -8,7 +8,7 @@
             @csrf
             @method('PUT')
 
-            @include('admin.artikel._fields')
+            @include('pages.admin.artikel._fields')
 
             <div class="mt-6 flex items-center gap-3">
                 <button type="submit"

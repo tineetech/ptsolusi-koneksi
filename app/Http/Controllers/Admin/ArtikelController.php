@@ -14,14 +14,14 @@ class ArtikelController extends Controller
 
     public function index()
     {
-        return view('admin.artikel.index', [
+        return view('pages.admin.artikel.index', [
             'artikel' => Artikel::orderByDesc('tanggal')->get(),
         ]);
     }
 
     public function create()
     {
-        return view('admin.artikel.create');
+        return view('pages.admin.artikel.create');
     }
 
     public function store(Request $request)
@@ -37,7 +37,7 @@ class ArtikelController extends Controller
 
     public function edit(Artikel $artikel)
     {
-        return view('admin.artikel.edit', [
+        return view('pages.admin.artikel.edit', [
             'artikel' => $artikel,
         ]);
     }

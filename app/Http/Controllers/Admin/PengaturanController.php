@@ -10,7 +10,7 @@ class PengaturanController extends Controller
 {
     public function edit()
     {
-        return view('admin.pengaturan.edit', [
+        return view('pages.admin.pengaturan.edit', [
             'user' => auth()->user(),
         ]);
     }

@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\UploadsImages;
 use App\Http\Controllers\Controller;
 use App\Models\Cms;
 use Illuminate\Http\Request;
 
 class CmsController extends Controller
 {
+    use UploadsImages;
+
     public function edit()
     {
-        return view('admin.cms.edit', [
+        return view('pages.admin.cms.edit', [
             'profil' => Cms::profil(),
         ]);
     }
@@ -20,15 +23,21 @@ class CmsController extends Controller
         $data = $request->validate([
             'tentang_judul' => ['required', 'string'],
             'tentang_isi' => ['required', 'string'],
-            'tentang_gambar' => ['required', 'string', 'max:2048'],
+            'tentang_gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'visi' => ['required', 'string'],
             'misi' => ['required', 'string'],
             'nilai' => ['required', 'string'],
         ]);
 
+        $gambar = Cms::profil()['tentang']['gambar'];
+
+        if ($request->hasFile('tentang_gambar')) {
+            $gambar = $this->storeImage($request->file('tentang_gambar'), 'profil', $gambar);
+        }
+
         $this->set('profil.tentang.judul', $data['tentang_judul']);
         $this->set('profil.tentang.isi', $this->lines($data['tentang_isi']));
-        $this->set('profil.tentang.gambar', $data['tentang_gambar']);
+        $this->set('profil.tentang.gambar', $gambar);
         $this->set('profil.visi', $data['visi']);
         $this->set('profil.misi', $this->lines($data['misi']));
         $this->set('profil.nilai', $this->nilai($data['nilai']));

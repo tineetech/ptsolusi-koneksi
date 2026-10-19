@@ -82,7 +82,7 @@ class AdminPanelTest extends TestCase
         $this->actingAs($admin)->put('/admin/cms', [
             'tentang_judul' => 'Judul Baru',
             'tentang_isi' => "Paragraf satu.\nParagraf dua.",
-            'tentang_gambar' => 'https://example.com/a.jpg',
+            'tentang_gambar' => UploadedFile::fake()->image('profil.jpg'),
             'visi' => 'Visi baru',
             'misi' => "Misi satu\nMisi dua",
             'nilai' => "Jujur | Selalu jujur\nCepat | Bekerja cepat",
@@ -92,8 +92,11 @@ class AdminPanelTest extends TestCase
 
         $this->assertSame('Judul Baru', $profil['tentang']['judul']);
         $this->assertSame(['Paragraf satu.', 'Paragraf dua.'], $profil['tentang']['isi']);
+        $this->assertStringStartsWith('images/profil/', $profil['tentang']['gambar']);
         $this->assertSame('Jujur', $profil['nilai'][0]['judul']);
         $this->assertSame('Bekerja cepat', $profil['nilai'][1]['deskripsi']);
+
+        @unlink(public_path($profil['tentang']['gambar']));
     }
 
     public function test_admin_bisa_memperbarui_informasi_profil(): void

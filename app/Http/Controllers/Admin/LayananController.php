@@ -14,14 +14,14 @@ class LayananController extends Controller
 
     public function index()
     {
-        return view('admin.layanan.index', [
+        return view('pages.admin.layanan.index', [
             'layanan' => Produk::latest()->get(),
         ]);
     }
 
     public function create()
     {
-        return view('admin.layanan.create');
+        return view('pages.admin.layanan.create');
     }
 
     public function store(Request $request)
@@ -38,7 +38,7 @@ class LayananController extends Controller
 
     public function edit(Produk $layanan)
     {
-        return view('admin.layanan.edit', [
+        return view('pages.admin.layanan.edit', [
             'layanan' => $layanan,
         ]);
     }

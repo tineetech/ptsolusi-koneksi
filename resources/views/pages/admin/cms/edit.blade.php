@@ -8,7 +8,7 @@
             <i class="fa-solid fa-circle-info"></i> Halaman ini hanya untuk mengubah konten bagian <strong>Profil Perusahaan</strong>.
         </div>
 
-        <form method="POST" action="{{ route('admin.cms.update') }}" class="space-y-6">
+        <form method="POST" action="{{ route('admin.cms.update') }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -25,14 +25,10 @@
                         @error('tentang_judul') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <div>
-                        <label for="tentang_gambar" class="block text-sm font-medium text-slate-700">URL Gambar</label>
-                        <input type="text" id="tentang_gambar" name="tentang_gambar"
-                               value="{{ old('tentang_gambar', $profil['tentang']['gambar']) }}" required
-                               placeholder="Contoh: images/profil/kantor.jpg"
-                               class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
-                        @error('tentang_gambar') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
-                    </div>
+                    <x-image-input
+                        name="tentang_gambar"
+                        label="Gambar"
+                        :current="$profil['tentang']['gambar']" />
 
                     <div>
                         <label for="tentang_isi" class="block text-sm font-medium text-slate-700">Paragraf <span class="text-xs font-normal text-slate-400">(satu paragraf per baris)</span></label>

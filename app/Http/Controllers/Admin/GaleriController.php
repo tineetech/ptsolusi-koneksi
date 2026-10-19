@@ -13,14 +13,14 @@ class GaleriController extends Controller
 
     public function index()
     {
-        return view('admin.galeri.index', [
+        return view('pages.admin.galeri.index', [
             'galeri' => Galeri::orderByDesc('tanggal')->get(),
         ]);
     }
 
     public function create()
     {
-        return view('admin.galeri.create');
+        return view('pages.admin.galeri.create');
     }
 
     public function store(Request $request)
@@ -35,7 +35,7 @@ class GaleriController extends Controller
 
     public function edit(Galeri $galeri)
     {
-        return view('admin.galeri.edit', [
+        return view('pages.admin.galeri.edit', [
             'galeri' => $galeri,
         ]);
     }
