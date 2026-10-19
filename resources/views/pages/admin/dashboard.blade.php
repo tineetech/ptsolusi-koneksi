@@ -132,9 +132,9 @@
     </div>
 
     <!-- Supporting Grid: Artikel Terbaru & Aksi Cepat -->
-    <div class="grid gap-6 lg:grid-cols-2">
+    <div class="grid min-w-0 gap-6 lg:grid-cols-2">
         <!-- Artikel Terbaru -->
-        <div class="rounded-2xl border border-slate-200 bg-white p-6">
+        <div class="min-w-0 rounded-2xl border border-slate-200 bg-white p-6">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-2">
                     <i class="fa-regular fa-newspaper text-lg text-indigo-600"></i>
@@ -175,7 +175,7 @@
         </div>
 
         <!-- Aksi Cepat & Pintasan Navigasi -->
-        <div class="rounded-2xl border border-slate-200 bg-white p-6">
+        <div class="min-w-0 rounded-2xl border border-slate-200 bg-white p-6">
             <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
                 <i class="fa-solid fa-bolt text-lg text-indigo-600"></i>
                 <h3 class="font-bold text-slate-900">Pintasan Cepat</h3>
