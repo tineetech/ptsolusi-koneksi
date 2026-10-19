@@ -10,6 +10,21 @@
         :breadcrumb="['Kontak' => null]" />
 
     <section class="mx-auto max-w-6xl px-4 py-16">
+        <div class="mb-10 w-full overflow-hidden rounded-2xl border border-slate-200">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.524373070324!2d106.80440497476707!3d-6.581543593411969!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c42e085514db%3A0xc0e7670544320099!2sJl.%20Raya%20Pajajaran%20No.88f%2C%20RT.01%2FRW.07%2C%20Bantarjati%2C%20Kec.%20Bogor%20Utara%2C%20Kota%20Bogor%2C%20Jawa%20Barat%2016153!5e0!3m2!1sid!2sid!4v1792419170966!5m2!1sid!2sid"
+                class="h-56 w-full border-0 md:h-64"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+
+        @if (session('success'))
+            <div class="mb-8 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+            </div>
+        @endif
+
         <div class="grid gap-10 lg:grid-cols-3">
             <div class="space-y-4">
                 @foreach ([
@@ -31,7 +46,7 @@
             </div>
 
             <div class="lg:col-span-2">
-                <form action="#" method="POST" class="rounded-2xl border border-slate-200 bg-white p-8">
+                <form action="{{ route('kontak.store') }}" method="POST" class="rounded-2xl border border-slate-200 bg-white p-8">
                     @csrf
                     <h2 class="text-xl font-bold text-slate-900">Kirim Pesan</h2>
                     <p class="mt-1 text-sm text-slate-500">Isi formulir di bawah ini, tim kami akan segera menghubungi Anda.</p>
@@ -40,26 +55,33 @@
                         <div>
                             <label for="nama" class="block text-sm font-medium text-slate-700">Nama Lengkap</label>
                             <input type="text" id="nama" name="nama" required
+                                   value="{{ old('nama') }}"
                                    placeholder="Masukkan nama lengkap Anda"
                                    class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+                            @error('nama') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="email" class="block text-sm font-medium text-slate-700">Email</label>
                             <input type="email" id="email" name="email" required
+                                   value="{{ old('email') }}"
                                    placeholder="nama@email.com"
                                    class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+                            @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div class="sm:col-span-2">
                             <label for="subjek" class="block text-sm font-medium text-slate-700">Subjek</label>
                             <input type="text" id="subjek" name="subjek" required
+                                   value="{{ old('subjek') }}"
                                    placeholder="Contoh: Konsultasi pemasangan jaringan"
                                    class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+                            @error('subjek') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                         <div class="sm:col-span-2">
                             <label for="pesan" class="block text-sm font-medium text-slate-700">Pesan</label>
                             <textarea id="pesan" name="pesan" rows="5" required
                                       placeholder="Tulis pesan Anda di sini..."
-                                      class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"></textarea>
+                                      class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">{{ old('pesan') }}</textarea>
+                            @error('pesan') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
 

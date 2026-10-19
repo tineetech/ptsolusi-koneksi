@@ -9,7 +9,7 @@ class ArtikelController extends Controller
     public function index()
     {
         return view('pages.artikel', [
-            'artikel' => Artikel::orderByDesc('tanggal')->get(),
+            'artikel' => Artikel::orderByDesc('tanggal')->paginate(6),
         ]);
     }
 

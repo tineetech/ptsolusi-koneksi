@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\UploadsImages;
 use App\Http\Controllers\Controller;
 use App\Models\Produk;
 use Illuminate\Http\Request;
@@ -10,8 +9,6 @@ use Illuminate\Support\Str;
 
 class LayananController extends Controller
 {
-    use UploadsImages;
-
     public function index()
     {
         return view('pages.admin.layanan.index', [
@@ -26,10 +23,43 @@ class LayananController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate($this->rules());
-        $data['slug'] = $this->uniqueSlug($data['nama']);
-        $data['fitur'] = $this->toLines($data['fitur']);
-        $data['gambar'] = $this->storeImage($request->file('gambar'), 'layanan');
+        $data = $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'kategori' => ['required', 'string', 'max:255'],
+            'gambar' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'ringkas' => ['required', 'string'],
+            'deskripsi' => ['required', 'string'],
+            'fitur' => ['required', 'string'],
+        ]);
+
+        $slug = Str::slug($data['nama']);
+        $slugAwal = $slug;
+        $angka = 1;
+
+        while (Produk::where('slug', $slug)->exists()) {
+            $slug = $slugAwal.'-'.$angka;
+            $angka++;
+        }
+
+        $folder = public_path('images/layanan');
+
+        if (! is_dir($folder)) {
+            mkdir($folder, 0775, true);
+        }
+
+        $file = $request->file('gambar');
+        $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+
+        if ($namaFile === '') {
+            $namaFile = 'gambar';
+        }
+
+        $namaFile = $namaFile.'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+        $file->move($folder, $namaFile);
+
+        $data['slug'] = $slug;
+        $data['gambar'] = 'images/layanan/'.$namaFile;
+        $data['fitur'] = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $data['fitur']))));
 
         Produk::create($data);
 
@@ -45,11 +75,43 @@ class LayananController extends Controller
 
     public function update(Request $request, Produk $layanan)
     {
-        $data = $request->validate($this->rules(false));
-        $data['fitur'] = $this->toLines($data['fitur']);
+        $data = $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'kategori' => ['required', 'string', 'max:255'],
+            'gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'ringkas' => ['required', 'string'],
+            'deskripsi' => ['required', 'string'],
+            'fitur' => ['required', 'string'],
+        ]);
+
+        $data['fitur'] = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $data['fitur']))));
 
         if ($request->hasFile('gambar')) {
-            $data['gambar'] = $this->storeImage($request->file('gambar'), 'layanan', $layanan->gambar);
+            $folder = public_path('images/layanan');
+
+            if (! is_dir($folder)) {
+                mkdir($folder, 0775, true);
+            }
+
+            if ($layanan->gambar !== null && str_starts_with($layanan->gambar, 'images/layanan/')) {
+                $fileLama = public_path($layanan->gambar);
+
+                if (is_file($fileLama)) {
+                    unlink($fileLama);
+                }
+            }
+
+            $file = $request->file('gambar');
+            $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+
+            if ($namaFile === '') {
+                $namaFile = 'gambar';
+            }
+
+            $namaFile = $namaFile.'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+            $file->move($folder, $namaFile);
+
+            $data['gambar'] = 'images/layanan/'.$namaFile;
         } else {
             unset($data['gambar']);
         }
@@ -64,39 +126,5 @@ class LayananController extends Controller
         $layanan->delete();
 
         return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil dihapus.');
-    }
-
-    private function rules(bool $requireImage = true): array
-    {
-        return [
-            'nama' => ['required', 'string', 'max:255'],
-            'kategori' => ['required', 'string', 'max:255'],
-            'gambar' => [$requireImage ? 'required' : 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'ringkas' => ['required', 'string'],
-            'deskripsi' => ['required', 'string'],
-            'fitur' => ['required', 'string'],
-        ];
-    }
-
-    private function uniqueSlug(string $nama): string
-    {
-        $base = Str::slug($nama);
-        $slug = $base;
-        $counter = 1;
-
-        while (Produk::where('slug', $slug)->exists()) {
-            $slug = $base.'-'.$counter++;
-        }
-
-        return $slug;
-    }
-
-    private function toLines(string $value): array
-    {
-        return collect(preg_split('/\r\n|\r|\n/', $value))
-            ->map(fn ($line) => trim($line))
-            ->filter()
-            ->values()
-            ->all();
     }
 }

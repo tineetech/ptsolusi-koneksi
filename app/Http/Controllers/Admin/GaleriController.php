@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\UploadsImages;
 use App\Http\Controllers\Controller;
 use App\Models\Galeri;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GaleriController extends Controller
 {
-    use UploadsImages;
-
     public function index()
     {
         return view('pages.admin.galeri.index', [
@@ -25,8 +23,29 @@ class GaleriController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate($this->rules());
-        $data['gambar'] = $this->storeImage($request->file('gambar'), 'galery');
+        $data = $request->validate([
+            'judul' => ['required', 'string', 'max:255'],
+            'tanggal' => ['required', 'date'],
+            'gambar' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ]);
+
+        $folder = public_path('images/galery');
+
+        if (! is_dir($folder)) {
+            mkdir($folder, 0775, true);
+        }
+
+        $file = $request->file('gambar');
+        $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+
+        if ($namaFile === '') {
+            $namaFile = 'gambar';
+        }
+
+        $namaFile = $namaFile.'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+        $file->move($folder, $namaFile);
+
+        $data['gambar'] = 'images/galery/'.$namaFile;
 
         Galeri::create($data);
 
@@ -42,10 +61,38 @@ class GaleriController extends Controller
 
     public function update(Request $request, Galeri $galeri)
     {
-        $data = $request->validate($this->rules(false));
+        $data = $request->validate([
+            'judul' => ['required', 'string', 'max:255'],
+            'tanggal' => ['required', 'date'],
+            'gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ]);
 
         if ($request->hasFile('gambar')) {
-            $data['gambar'] = $this->storeImage($request->file('gambar'), 'galery', $galeri->gambar);
+            $folder = public_path('images/galery');
+
+            if (! is_dir($folder)) {
+                mkdir($folder, 0775, true);
+            }
+
+            if ($galeri->gambar !== null && str_starts_with($galeri->gambar, 'images/galery/')) {
+                $fileLama = public_path($galeri->gambar);
+
+                if (is_file($fileLama)) {
+                    unlink($fileLama);
+                }
+            }
+
+            $file = $request->file('gambar');
+            $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+
+            if ($namaFile === '') {
+                $namaFile = 'gambar';
+            }
+
+            $namaFile = $namaFile.'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+            $file->move($folder, $namaFile);
+
+            $data['gambar'] = 'images/galery/'.$namaFile;
         } else {
             unset($data['gambar']);
         }
@@ -60,14 +107,5 @@ class GaleriController extends Controller
         $galeri->delete();
 
         return redirect()->route('admin.galeri.index')->with('success', 'Galeri berhasil dihapus.');
-    }
-
-    private function rules(bool $requireImage = true): array
-    {
-        return [
-            'judul' => ['required', 'string', 'max:255'],
-            'tanggal' => ['required', 'date'],
-            'gambar' => [$requireImage ? 'required' : 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-        ];
     }
 }

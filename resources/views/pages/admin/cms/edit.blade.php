@@ -31,10 +31,10 @@
                         :current="$profil['tentang']['gambar']" />
 
                     <div>
-                        <label for="tentang_isi" class="block text-sm font-medium text-slate-700">Paragraf <span class="text-xs font-normal text-slate-400">(satu paragraf per baris)</span></label>
+                        <label for="tentang_isi" class="block text-sm font-medium text-slate-700">Paragraf <span class="text-xs font-normal text-slate-400">(pisahkan paragraf dengan enter)</span></label>
                         <textarea id="tentang_isi" name="tentang_isi" rows="5" required
-                                  placeholder="Tulis satu paragraf per baris..."
-                                  class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">{{ old('tentang_isi', implode("\n", $profil['tentang']['isi'])) }}</textarea>
+                                  placeholder="Tulis isi tentang perusahaan..."
+                                  class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">{{ old('tentang_isi', $profil['tentang']['isi']) }}</textarea>
                         @error('tentang_isi') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
@@ -55,22 +55,90 @@
                     <div>
                         <label for="misi" class="block text-sm font-medium text-slate-700">Misi <span class="text-xs font-normal text-slate-400">(satu poin per baris)</span></label>
                         <textarea id="misi" name="misi" rows="5" required
-                                  placeholder="Tulis satu poin misi per baris..."
-                                  class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">{{ old('misi', implode("\n", $profil['misi'])) }}</textarea>
+                                  placeholder="Tulis misi perusahaan..."
+                                  class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">{{ old('misi', $profil['misi']) }}</textarea>
                         @error('misi') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>
 
             <div class="rounded-2xl border border-slate-200 bg-white p-8">
-                <h2 class="text-lg font-bold text-slate-900">Nilai Perusahaan</h2>
-                <p class="mt-1 text-sm text-slate-500">Satu nilai per baris dengan format <code class="rounded bg-slate-100 px-1.5 py-0.5 text-xs">Judul | Deskripsi</code></p>
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Nilai Perusahaan</h2>
+                        <p class="mt-1 text-sm text-slate-500">Klik judul untuk membuka, lalu tambah atau kurangi nilai sesuai kebutuhan.</p>
+                    </div>
+                    <button type="button" id="tambah-nilai"
+                            class="inline-flex flex-none items-center gap-2 rounded-lg bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 transition hover:bg-indigo-100">
+                        <i class="fa-solid fa-plus"></i> Tambah Nilai
+                    </button>
+                </div>
 
-                <textarea id="nilai" name="nilai" rows="5" required
-                          placeholder="Contoh: Integritas | Menjunjung tinggi kejujuran"
-                          class="mt-4 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">{{ old('nilai', collect($profil['nilai'])->map(fn ($n) => $n['judul'].' | '.$n['deskripsi'])->implode("\n")) }}</textarea>
-                @error('nilai') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                <div id="nilai-list" class="mt-5 space-y-3">
+                    @foreach ($profil['nilai'] as $i => $item)
+                        <div class="nilai-item rounded-xl border border-slate-200">
+                            <div class="flex items-center justify-between gap-2 px-4 py-3">
+                                <button type="button" class="nilai-toggle flex flex-1 items-center gap-3 text-left text-sm font-semibold text-slate-700">
+                                    <i class="nilai-chevron fa-solid fa-chevron-right text-xs text-slate-400 transition-transform"></i>
+                                    <span class="nilai-title">{{ old('nilai_judul.'.$i, $item['judul']) ?: 'Nilai Baru' }}</span>
+                                </button>
+                                <button type="button" class="nilai-hapus rounded-md p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-600" aria-label="Hapus nilai">
+                                    <i class="fa-solid fa-trash text-sm"></i>
+                                </button>
+                            </div>
+                            <div class="nilai-body hidden border-t border-slate-200 p-4">
+                                <div class="grid gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700">Judul</label>
+                                        <input type="text" name="nilai_judul[]" value="{{ old('nilai_judul.'.$i, $item['judul']) }}"
+                                               placeholder="Contoh: Integritas"
+                                               class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700">Deskripsi</label>
+                                        <textarea name="nilai_deskripsi[]" rows="2"
+                                                  placeholder="Contoh: Menjunjung tinggi kejujuran dalam setiap layanan"
+                                                  class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">{{ old('nilai_deskripsi.'.$i, $item['deskripsi']) }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                @error('nilai_judul.*') <p class="mt-2 text-xs text-red-600">{{ $message }}</p> @enderror
+                @error('nilai_deskripsi.*') <p class="mt-2 text-xs text-red-600">{{ $message }}</p> @enderror
             </div>
+
+            <template id="nilai-template">
+                <div class="nilai-item rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between gap-2 px-4 py-3">
+                        <button type="button" class="nilai-toggle flex flex-1 items-center gap-3 text-left text-sm font-semibold text-slate-700">
+                            <i class="nilai-chevron fa-solid fa-chevron-right rotate-90 text-xs text-slate-400 transition-transform"></i>
+                            <span class="nilai-title">Nilai Baru</span>
+                        </button>
+                        <button type="button" class="nilai-hapus rounded-md p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-600" aria-label="Hapus nilai">
+                            <i class="fa-solid fa-trash text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="nilai-body border-t border-slate-200 p-4">
+                        <div class="grid gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700">Judul</label>
+                                <input type="text" name="nilai_judul[]" value=""
+                                       placeholder="Contoh: Integritas"
+                                       class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700">Deskripsi</label>
+                                <textarea name="nilai_deskripsi[]" rows="2"
+                                          placeholder="Contoh: Menjunjung tinggi kejujuran dalam setiap layanan"
+                                          class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
 
             <div class="flex items-center gap-3">
                 <button type="submit"
@@ -82,3 +150,44 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        (function () {
+            var list = document.getElementById('nilai-list');
+            var template = document.getElementById('nilai-template');
+            var tombolTambah = document.getElementById('tambah-nilai');
+
+            function siapkanItem(item) {
+                var toggle = item.querySelector('.nilai-toggle');
+                var body = item.querySelector('.nilai-body');
+                var chevron = item.querySelector('.nilai-chevron');
+                var hapus = item.querySelector('.nilai-hapus');
+                var input = item.querySelector('input[name="nilai_judul[]"]');
+                var judul = item.querySelector('.nilai-title');
+
+                toggle.addEventListener('click', function () {
+                    body.classList.toggle('hidden');
+                    chevron.classList.toggle('rotate-90');
+                });
+
+                input.addEventListener('input', function () {
+                    judul.textContent = input.value.trim() || 'Nilai Baru';
+                });
+
+                hapus.addEventListener('click', function () {
+                    item.remove();
+                });
+            }
+
+            list.querySelectorAll('.nilai-item').forEach(siapkanItem);
+
+            tombolTambah.addEventListener('click', function () {
+                var item = template.content.firstElementChild.cloneNode(true);
+                list.appendChild(item);
+                siapkanItem(item);
+                item.querySelector('input').focus();
+            });
+        })();
+    </script>
+@endpush

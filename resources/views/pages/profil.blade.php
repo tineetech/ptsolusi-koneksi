@@ -13,11 +13,7 @@
             <div>
                 <span class="text-sm font-semibold uppercase tracking-wide text-indigo-600">Tentang Kami</span>
                 <h2 class="mt-3 text-3xl font-bold text-slate-900">{{ $profil['tentang']['judul'] }}</h2>
-                <div class="mt-5 space-y-4 leading-relaxed text-slate-600">
-                    @foreach ($profil['tentang']['isi'] as $paragraf)
-                        <p>{{ $paragraf }}</p>
-                    @endforeach
-                </div>
+                <p class="mt-5 whitespace-pre-line leading-relaxed text-slate-600">{{ $profil['tentang']['isi'] }}</p>
             </div>
             <img src="{{ asset($profil['tentang']['gambar']) }}" alt="Kantor PT Solusi Koneksi"
                  class="h-80 w-full rounded-2xl object-cover shadow-lg">
@@ -37,11 +33,7 @@
                 <div class="rounded-2xl border border-slate-200 p-8 md:col-span-2">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-xl font-bold text-indigo-600">M</div>
                     <h3 class="mt-4 text-xl font-bold text-slate-900">Misi</h3>
-                    <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-500">
-                        @foreach ($profil['misi'] as $misi)
-                            <li>&bull; {{ $misi }}</li>
-                        @endforeach
-                    </ul>
+                    <p class="mt-3 whitespace-pre-line text-sm leading-relaxed text-slate-500">{{ $profil['misi'] }}</p>
                 </div>
             </div>
         </div>

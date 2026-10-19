@@ -30,14 +30,50 @@
         </div>
     </section>
 
+    @php
+        $klien = ['xl.svg', 'mandiri.webp', 'bca.webp', 'bonet.png', 'idn-network.png', 'indosat.svg', 'telkomsel.png', 'astra.png'];
+    @endphp
+
     <section class="relative z-10 mx-auto -mt-12 max-w-6xl px-4">
-        <div class="grid gap-4 rounded-2xl bg-white p-6 shadow-lg md:grid-cols-4">
-            @foreach ([['10+', 'Tahun Pengalaman'], ['500+', 'Proyek Selesai'], ['24/7', 'Dukungan Teknis'], ['99,5%', 'SLA Ketersediaan']] as [$angka, $label])
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-indigo-600">{{ $angka }}</div>
-                    <div class="mt-1 text-sm text-slate-500">{{ $label }}</div>
+        <div class="rounded-2xl bg-white px-4 py-8 shadow-lg sm:px-8">
+            <div class="text-center">
+                <span class="text-sm font-semibold uppercase tracking-wide text-indigo-600">Klien Kami</span>
+            </div>
+
+            <div class="marquee mt-4" aria-label="Logo klien PT Solusi Koneksi">
+                <div class="marquee-track">
+                    @foreach ($klien as $logo)
+                        <div class="mx-6 flex h-16 w-36 flex-none items-center justify-center">
+                            <img src="{{ asset('images/klien/'.$logo) }}" alt="Logo klien PT Solusi Koneksi"
+                                 class="max-h-12 w-auto opacity-60 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0" loading="lazy">
+                        </div>
+                    @endforeach
+                    @foreach ($klien as $logo)
+                        <div class="mx-6 flex h-16 w-36 flex-none items-center justify-center" aria-hidden="true">
+                            <img src="{{ asset('images/klien/'.$logo) }}" alt=""
+                                 class="max-h-12 w-auto opacity-60 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0" loading="lazy">
+                        </div>
+                    @endforeach
                 </div>
-            @endforeach
+            </div>
+        </div>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-4 py-20">
+        <div class="grid items-center gap-12 md:grid-cols-2">
+            <img src="{{ asset($profil['tentang']['gambar']) }}" alt="Tentang PT Solusi Koneksi"
+                 class="h-80 w-full rounded-2xl object-cover shadow-lg">
+
+            <div>
+                <span class="text-sm font-semibold uppercase tracking-wide text-indigo-600">Tentang Kami</span>
+                <h2 class="mt-3 text-3xl font-bold text-slate-900">{{ $profil['tentang']['judul'] }}</h2>
+                <p class="mt-5 whitespace-pre-line leading-relaxed text-slate-600">{{ \Illuminate\Support\Str::limit($profil['tentang']['isi'], 320) }}</p>
+
+                <a href="{{ route('profil') }}" class="mt-8 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700">
+                    Selengkapnya
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -108,3 +144,51 @@
         </div>
     </section>
 @endsection
+
+@push('styles')
+    <style>
+        .marquee {
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee-scroll 32s linear infinite;
+        }
+
+        .marquee:hover .marquee-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes marquee-scroll {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .marquee {
+                overflow-x: auto;
+                -webkit-mask-image: none;
+                mask-image: none;
+            }
+
+            .marquee-track {
+                animation: none;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: auto;
+            }
+
+            .marquee-track [aria-hidden="true"] {
+                display: none;
+            }
+        }
+    </style>
+@endpush

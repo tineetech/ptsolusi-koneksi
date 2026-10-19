@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\UploadsImages;
 use App\Http\Controllers\Controller;
 use App\Models\Artikel;
 use Illuminate\Http\Request;
@@ -10,8 +9,6 @@ use Illuminate\Support\Str;
 
 class ArtikelController extends Controller
 {
-    use UploadsImages;
-
     public function index()
     {
         return view('pages.admin.artikel.index', [
@@ -26,9 +23,34 @@ class ArtikelController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate($this->rules());
-        $data['slug'] = $this->uniqueSlug($data['judul']);
-        $data['gambar'] = $this->storeImage($request->file('gambar'), 'artikel');
+        $data = $request->validate([
+            'judul' => ['required', 'string', 'max:255'],
+            'kategori' => ['required', 'string', 'max:255'],
+            'tanggal' => ['required', 'date'],
+            'penulis' => ['required', 'string', 'max:255'],
+            'gambar' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'ringkas' => ['required', 'string'],
+            'isi' => ['required', 'string'],
+        ]);
+
+        $slug = Str::slug($data['judul']);
+        $slugAwal = $slug;
+        $angka = 1;
+
+        while (Artikel::where('slug', $slug)->exists()) {
+            $slug = $slugAwal.'-'.$angka;
+            $angka++;
+        }
+
+        $folder = public_path('images/artikel');
+
+        $file = $request->file('gambar');
+        $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) .'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+
+        $file->move($folder, $namaFile);
+
+        $data['slug'] = $slug;
+        $data['gambar'] = 'images/artikel/'.$namaFile;
 
         Artikel::create($data);
 
@@ -44,10 +66,33 @@ class ArtikelController extends Controller
 
     public function update(Request $request, Artikel $artikel)
     {
-        $data = $request->validate($this->rules(false));
+        $data = $request->validate([
+            'judul' => ['required', 'string', 'max:255'],
+            'kategori' => ['required', 'string', 'max:255'],
+            'tanggal' => ['required', 'date'],
+            'penulis' => ['required', 'string', 'max:255'],
+            'gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'ringkas' => ['required', 'string'],
+            'isi' => ['required', 'string'],
+        ]);
 
         if ($request->hasFile('gambar')) {
-            $data['gambar'] = $this->storeImage($request->file('gambar'), 'artikel', $artikel->gambar);
+            $folder = public_path('images/artikel');
+
+            if ($artikel->gambar !== null && str_starts_with($artikel->gambar, 'images/artikel/')) {
+                $fileLama = public_path($artikel->gambar);
+
+                if (is_file($fileLama)) {
+                    unlink($fileLama);
+                }
+            }
+
+            $file = $request->file('gambar');
+            $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+
+            $file->move($folder, $namaFile);
+
+            $data['gambar'] = 'images/artikel/'.$namaFile;
         } else {
             unset($data['gambar']);
         }
@@ -62,31 +107,5 @@ class ArtikelController extends Controller
         $artikel->delete();
 
         return redirect()->route('admin.artikel.index')->with('success', 'Artikel berhasil dihapus.');
-    }
-
-    private function rules(bool $requireImage = true): array
-    {
-        return [
-            'judul' => ['required', 'string', 'max:255'],
-            'kategori' => ['required', 'string', 'max:255'],
-            'tanggal' => ['required', 'date'],
-            'penulis' => ['required', 'string', 'max:255'],
-            'gambar' => [$requireImage ? 'required' : 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'ringkas' => ['required', 'string'],
-            'isi' => ['required', 'string'],
-        ];
-    }
-
-    private function uniqueSlug(string $judul): string
-    {
-        $base = Str::slug($judul);
-        $slug = $base;
-        $counter = 1;
-
-        while (Artikel::where('slug', $slug)->exists()) {
-            $slug = $base.'-'.$counter++;
-        }
-
-        return $slug;
     }
 }

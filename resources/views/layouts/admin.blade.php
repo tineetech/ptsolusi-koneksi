@@ -24,6 +24,7 @@
                     ['label' => 'Layanan', 'route' => 'admin.layanan.index', 'icon' => 'fa-solid fa-box'],
                     ['label' => 'Artikel', 'route' => 'admin.artikel.index', 'icon' => 'fa-regular fa-newspaper'],
                     ['label' => 'Galeri', 'route' => 'admin.galeri.index', 'icon' => 'fa-regular fa-image'],
+                    ['label' => 'Pesan Masuk', 'route' => 'admin.pesan.index', 'icon' => 'fa-regular fa-envelope'],
                     ['label' => 'CMS Profil', 'route' => 'admin.cms.edit', 'icon' => 'fa-solid fa-pen-to-square'],
                     ['label' => 'Pengaturan', 'route' => 'admin.pengaturan.edit', 'icon' => 'fa-solid fa-gear'],
                 ];

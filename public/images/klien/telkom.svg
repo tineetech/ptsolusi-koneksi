@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" role="img" aria-label="Telkom Indonesia">
+  <rect x="4" y="8" width="64" height="64" rx="16" fill="#E4002B"/>
+  <text x="36" y="51" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle">T</text>
+  <text x="82" y="44" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#111827">Telkom</text>
+  <text x="82" y="61" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="600" letter-spacing="2.5" fill="#6B7280">INDONESIA</text>
+</svg>
