@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\UploadsImages;
 use App\Http\Controllers\Controller;
 use App\Models\Produk;
 use Illuminate\Http\Request;
@@ -9,6 +10,8 @@ use Illuminate\Support\Str;
 
 class LayananController extends Controller
 {
+    use UploadsImages;
+
     public function index()
     {
         return view('admin.layanan.index', [
@@ -23,9 +26,10 @@ class LayananController extends Controller
 
     public function store(Request $request)
     {
-        $data = $this->validated($request);
+        $data = $request->validate($this->rules());
         $data['slug'] = $this->uniqueSlug($data['nama']);
         $data['fitur'] = $this->toLines($data['fitur']);
+        $data['gambar'] = $this->storeImage($request->file('gambar'), 'layanan');
 
         Produk::create($data);
 
@@ -41,8 +45,14 @@ class LayananController extends Controller
 
     public function update(Request $request, Produk $layanan)
     {
-        $data = $this->validated($request);
+        $data = $request->validate($this->rules(false));
         $data['fitur'] = $this->toLines($data['fitur']);
+
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $this->storeImage($request->file('gambar'), 'layanan', $layanan->gambar);
+        } else {
+            unset($data['gambar']);
+        }
 
         $layanan->update($data);
 
@@ -56,16 +66,16 @@ class LayananController extends Controller
         return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil dihapus.');
     }
 
-    private function validated(Request $request): array
+    private function rules(bool $requireImage = true): array
     {
-        return $request->validate([
+        return [
             'nama' => ['required', 'string', 'max:255'],
             'kategori' => ['required', 'string', 'max:255'],
-            'gambar' => ['required', 'string', 'max:2048'],
+            'gambar' => [$requireImage ? 'required' : 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'ringkas' => ['required', 'string'],
             'deskripsi' => ['required', 'string'],
             'fitur' => ['required', 'string'],
-        ]);
+        ];
     }
 
     private function uniqueSlug(string $nama): string

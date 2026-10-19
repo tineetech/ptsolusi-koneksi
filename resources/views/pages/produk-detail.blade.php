@@ -25,7 +25,7 @@
                 <ul class="mt-4 grid gap-3 sm:grid-cols-2">
                     @foreach ($produk['fitur'] as $fitur)
                         <li class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-                            <i class="bx bx-check-circle mt-0.5 text-xl text-indigo-600"></i>
+                            <i class="fa-solid fa-circle-check mt-0.5 text-xl text-indigo-600"></i>
                             <span class="text-sm text-slate-600">{{ $fitur }}</span>
                         </li>
                     @endforeach
@@ -41,7 +41,7 @@
                     <a href="https://wa.me/6289526333265?text={{ urlencode('Halo, saya mau konsultasi layanan '.$produk['nama'].'.') }}"
                        target="_blank" rel="noopener noreferrer"
                        class="mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-indigo-600 transition hover:bg-indigo-50">
-                        <i class="bx bxl-whatsapp"></i> Hubungi Kami
+                        <i class="fa-brands fa-whatsapp"></i> Hubungi Kami
                     </a>
                 </div>
 
@@ -63,7 +63,7 @@
 
         <div class="mt-10">
             <a href="{{ route('produk') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700">
-                <i class="bx bx-left-arrow-alt"></i> Kembali ke daftar produk
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke daftar produk
             </a>
         </div>
     </section>

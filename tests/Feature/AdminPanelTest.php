@@ -6,6 +6,7 @@ use App\Models\Cms;
 use App\Models\Produk;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -59,7 +60,7 @@ class AdminPanelTest extends TestCase
         $this->actingAs($admin)->post('/admin/layanan', [
             'nama' => 'Uji Coba Layanan',
             'kategori' => 'Pengujian',
-            'gambar' => 'https://example.com/gambar.jpg',
+            'gambar' => UploadedFile::fake()->image('uji-coba.jpg'),
             'ringkas' => 'Ringkasan uji coba.',
             'deskripsi' => 'Deskripsi uji coba layanan.',
             'fitur' => "Fitur satu\nFitur dua",
@@ -69,6 +70,9 @@ class AdminPanelTest extends TestCase
 
         $this->assertNotNull($produk);
         $this->assertSame(['Fitur satu', 'Fitur dua'], $produk->fitur);
+        $this->assertStringStartsWith('images/layanan/', $produk->gambar);
+
+        @unlink(public_path($produk->gambar));
     }
 
     public function test_admin_bisa_memperbarui_konten_profil(): void

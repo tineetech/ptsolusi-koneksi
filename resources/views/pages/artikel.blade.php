@@ -18,12 +18,12 @@
                     <div class="flex flex-1 flex-col p-6">
                         <div class="flex items-center gap-3 text-xs text-slate-400">
                             <span class="rounded-full bg-indigo-50 px-2.5 py-1 font-semibold text-indigo-600">{{ $item['kategori'] }}</span>
-                            <span class="flex items-center gap-1"><i class="bx bx-calendar"></i> {{ $item['tanggal_formatted'] }}</span>
+                            <span class="flex items-center gap-1"><i class="fa-regular fa-calendar"></i> {{ $item['tanggal_formatted'] }}</span>
                         </div>
                         <h3 class="mt-3 text-lg font-bold text-slate-900 group-hover:text-indigo-600">{{ $item['judul'] }}</h3>
                         <p class="mt-2 flex-1 text-sm leading-relaxed text-slate-500">{{ $item['ringkas'] }}</p>
                         <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-indigo-600">
-                            Baca selengkapnya <i class="bx bx-right-arrow-alt"></i>
+                            Baca selengkapnya <i class="fa-solid fa-arrow-right"></i>
                         </span>
                     </div>
                 </a>

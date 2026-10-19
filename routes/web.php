@@ -7,7 +7,6 @@ use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
 use App\Http\Controllers\Admin\LayananController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\ArtikelController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KontakController;
@@ -27,13 +26,6 @@ Route::get('/artikel/{slug}', [ArtikelController::class, 'show'])->name('artikel
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
-});
-
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
-
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -47,3 +39,5 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/pengaturan', [PengaturanController::class, 'edit'])->name('pengaturan.edit');
     Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
 });
+
+require __DIR__.'/auth.php';

@@ -13,11 +13,11 @@
         <div class="flex flex-wrap items-center gap-2.5">
             <a href="{{ route('admin.layanan.create') }}"
                class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-2 text-xs font-semibold text-indigo-600 shadow-sm transition hover:bg-indigo-50">
-                <i class="bx bx-plus text-base"></i> Tambah Layanan
+                <i class="fa-solid fa-plus text-base"></i> Tambah Layanan
             </a>
             <a href="{{ route('admin.artikel.create') }}"
                class="inline-flex items-center gap-1.5 rounded-lg bg-indigo-700 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-indigo-800">
-                <i class="bx bx-news text-base"></i> Tulis Artikel
+                <i class="fa-regular fa-newspaper text-base"></i> Tulis Artikel
             </a>
         </div>
     </div>
@@ -25,9 +25,9 @@
     <!-- Stat Cards -->
     <div class="grid gap-6 sm:grid-cols-3">
         @foreach ([
-            ['label' => 'Total Layanan', 'jumlah' => $jumlahLayanan, 'route' => 'admin.layanan.index', 'icon' => 'bx-package', 'desc' => 'Produk aktif'],
-            ['label' => 'Total Artikel', 'jumlah' => $jumlahArtikel, 'route' => 'admin.artikel.index', 'icon' => 'bx-news', 'desc' => 'Publikasi berita'],
-            ['label' => 'Total Galeri', 'jumlah' => $jumlahGaleri, 'route' => 'admin.galeri.index', 'icon' => 'bx-image', 'desc' => 'Dokumentasi kegiatan'],
+            ['label' => 'Total Layanan', 'jumlah' => $jumlahLayanan, 'route' => 'admin.layanan.index', 'icon' => 'fa-solid fa-box', 'desc' => 'Produk aktif'],
+            ['label' => 'Total Artikel', 'jumlah' => $jumlahArtikel, 'route' => 'admin.artikel.index', 'icon' => 'fa-regular fa-newspaper', 'desc' => 'Publikasi berita'],
+            ['label' => 'Total Galeri', 'jumlah' => $jumlahGaleri, 'route' => 'admin.galeri.index', 'icon' => 'fa-regular fa-image', 'desc' => 'Dokumentasi kegiatan'],
         ] as $stat)
             <a href="{{ route($stat['route']) }}"
                class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-md">
@@ -37,7 +37,7 @@
                     <div class="mt-1 text-xs text-slate-400">{{ $stat['desc'] }}</div>
                 </div>
                 <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-2xl text-indigo-600">
-                    <i class="bx {{ $stat['icon'] }}"></i>
+                    <i class="{{ $stat['icon'] }}"></i>
                 </span>
             </a>
         @endforeach
@@ -53,11 +53,11 @@
             <div class="flex items-center gap-2">
                 <a href="{{ route('admin.layanan.create') }}"
                    class="inline-flex items-center gap-1 rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 transition hover:bg-indigo-100">
-                    <i class="bx bx-plus"></i> Tambah Baru
+                    <i class="fa-solid fa-plus"></i> Tambah Baru
                 </a>
                 <a href="{{ route('admin.layanan.index') }}"
                    class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 transition hover:text-slate-800">
-                    Lihat Semua <i class="bx bx-chevron-right"></i>
+                    Lihat Semua <i class="fa-solid fa-chevron-right"></i>
                 </a>
             </div>
         </div>
@@ -98,12 +98,12 @@
                                        target="_blank"
                                        class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-slate-100"
                                        title="Lihat Halaman Publik">
-                                        <i class="bx bx-link-external"></i>
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
                                     </a>
                                     <a href="{{ route('admin.layanan.edit', $item) }}"
                                        class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600 transition hover:bg-amber-100"
                                        title="Edit">
-                                        <i class="bx bx-edit"></i>
+                                        <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                     <form method="POST"
                                           action="{{ route('admin.layanan.destroy', $item) }}"
@@ -113,7 +113,7 @@
                                         <button type="submit"
                                                 class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50 text-red-600 transition hover:bg-red-100"
                                                 title="Hapus">
-                                            <i class="bx bx-trash"></i>
+                                            <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -137,11 +137,11 @@
         <div class="rounded-2xl border border-slate-200 bg-white p-6">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-2">
-                    <i class="bx bx-news text-lg text-indigo-600"></i>
+                    <i class="fa-regular fa-newspaper text-lg text-indigo-600"></i>
                     <h3 class="font-bold text-slate-900">Artikel Terbaru</h3>
                 </div>
                 <a href="{{ route('admin.artikel.index') }}" class="text-xs font-medium text-slate-500 hover:text-indigo-600">
-                    Lihat Semua <i class="bx bx-chevron-right"></i>
+                    Lihat Semua <i class="fa-solid fa-chevron-right"></i>
                 </a>
             </div>
 
@@ -165,7 +165,7 @@
                             </div>
                         </div>
                         <a href="{{ route('admin.artikel.edit', $art) }}" class="shrink-0 text-slate-400 hover:text-indigo-600">
-                            <i class="bx bx-edit text-base"></i>
+                            <i class="fa-solid fa-pen-to-square text-base"></i>
                         </a>
                     </div>
                 @empty
@@ -177,7 +177,7 @@
         <!-- Aksi Cepat & Pintasan Navigasi -->
         <div class="rounded-2xl border border-slate-200 bg-white p-6">
             <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
-                <i class="bx bx-bolt-circle text-lg text-indigo-600"></i>
+                <i class="fa-solid fa-bolt text-lg text-indigo-600"></i>
                 <h3 class="font-bold text-slate-900">Pintasan Cepat</h3>
             </div>
 
@@ -185,7 +185,7 @@
                 <a href="{{ route('admin.layanan.create') }}"
                    class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs font-semibold text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-600">
                     <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                        <i class="bx bx-plus text-base"></i>
+                        <i class="fa-solid fa-plus text-base"></i>
                     </span>
                     <span>Tambah Layanan</span>
                 </a>
@@ -193,7 +193,7 @@
                 <a href="{{ route('admin.artikel.create') }}"
                    class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs font-semibold text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-600">
                     <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                        <i class="bx bx-file text-base"></i>
+                        <i class="fa-regular fa-file text-base"></i>
                     </span>
                     <span>Tambah Artikel</span>
                 </a>
@@ -201,7 +201,7 @@
                 <a href="{{ route('admin.galeri.create') }}"
                    class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs font-semibold text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-600">
                     <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                        <i class="bx bx-image-add text-base"></i>
+                        <i class="fa-solid fa-image text-base"></i>
                     </span>
                     <span>Unggah Galeri</span>
                 </a>
@@ -209,7 +209,7 @@
                 <a href="{{ route('admin.cms.edit') }}"
                    class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs font-semibold text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-600">
                     <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                        <i class="bx bx-edit text-base"></i>
+                        <i class="fa-solid fa-pen-to-square text-base"></i>
                     </span>
                     <span>Edit CMS Profil</span>
                 </a>
@@ -217,7 +217,7 @@
                 <a href="{{ route('admin.pengaturan.edit') }}"
                    class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs font-semibold text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-600 sm:col-span-2">
                     <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                        <i class="bx bx-cog text-base"></i>
+                        <i class="fa-solid fa-gear text-base"></i>
                     </span>
                     <span>Pengaturan Akun & Sandi</span>
                 </a>

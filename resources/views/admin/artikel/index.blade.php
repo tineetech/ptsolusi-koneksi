@@ -7,7 +7,7 @@
         <p class="text-sm text-slate-500">Kelola artikel dan informasi terkini.</p>
         <a href="{{ route('admin.artikel.create') }}"
            class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
-            <i class="bx bx-plus text-lg"></i> Tambah Artikel
+            <i class="fa-solid fa-plus text-lg"></i> Tambah Artikel
         </a>
     </div>
 
@@ -37,7 +37,7 @@
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ route('admin.artikel.edit', $item) }}"
                                        class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-lg text-amber-600 transition hover:bg-amber-100" title="Edit">
-                                        <i class="bx bx-edit"></i>
+                                        <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                     <form method="POST" action="{{ route('admin.artikel.destroy', $item) }}"
                                           onsubmit="return confirm('Hapus artikel ini?')">
@@ -45,7 +45,7 @@
                                         @method('DELETE')
                                         <button type="submit"
                                                 class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-lg text-red-600 transition hover:bg-red-100" title="Hapus">
-                                            <i class="bx bx-trash"></i>
+                                            <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </form>
                                 </div>

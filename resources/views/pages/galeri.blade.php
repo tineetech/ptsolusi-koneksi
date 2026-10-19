@@ -17,7 +17,7 @@
                          class="h-64 w-full object-cover transition duration-300 group-hover:scale-105">
                     <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent p-6">
                         <span class="flex items-center gap-1 text-xs text-slate-200">
-                            <i class="bx bx-calendar"></i> {{ $item['tanggal_formatted'] }}
+                            <i class="fa-regular fa-calendar"></i> {{ $item['tanggal_formatted'] }}
                         </span>
                         <figcaption class="mt-1 text-lg font-semibold text-white">{{ $item['judul'] }}</figcaption>
                     </div>

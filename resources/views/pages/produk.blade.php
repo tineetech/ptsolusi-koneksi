@@ -24,7 +24,7 @@
                         <h3 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600">{{ $item['nama'] }}</h3>
                         <p class="mt-2 flex-1 text-sm leading-relaxed text-slate-500">{{ $item['ringkas'] }}</p>
                         <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-indigo-600">
-                            Selengkapnya <i class="bx bx-right-arrow-alt"></i>
+                            Selengkapnya <i class="fa-solid fa-arrow-right"></i>
                         </span>
                     </div>
                 </a>

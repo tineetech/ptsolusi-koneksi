@@ -13,8 +13,8 @@
             <article class="lg:col-span-2">
                 <div class="flex flex-wrap items-center gap-4 text-sm text-slate-500">
                     <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">{{ $artikel['kategori'] }}</span>
-                    <span class="flex items-center gap-1"><i class="bx bx-calendar"></i> {{ $artikel['tanggal_formatted'] }}</span>
-                    <span class="flex items-center gap-1"><i class="bx bx-user"></i> {{ $artikel['penulis'] }}</span>
+                    <span class="flex items-center gap-1"><i class="fa-regular fa-calendar"></i> {{ $artikel['tanggal_formatted'] }}</span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-user"></i> {{ $artikel['penulis'] }}</span>
                 </div>
 
                 <img src="{{ asset($artikel['gambar']) }}" alt="{{ $artikel['judul'] }}"
@@ -28,14 +28,14 @@
                 <div class="mt-10 flex items-center gap-4 border-t border-slate-200 pt-6">
                     <span class="text-sm font-semibold text-slate-500">Bagikan:</span>
                     <div class="flex gap-2">
-                        <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-lg text-slate-600 transition hover:bg-indigo-600 hover:text-white"><i class="bx bxl-facebook"></i></a>
-                        <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-lg text-slate-600 transition hover:bg-indigo-600 hover:text-white"><i class="bx bxl-twitter"></i></a>
-                        <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-lg text-slate-600 transition hover:bg-indigo-600 hover:text-white"><i class="bx bxl-whatsapp"></i></a>
+                        <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-lg text-slate-600 transition hover:bg-indigo-600 hover:text-white"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-lg text-slate-600 transition hover:bg-indigo-600 hover:text-white"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-lg text-slate-600 transition hover:bg-indigo-600 hover:text-white"><i class="fa-brands fa-whatsapp"></i></a>
                     </div>
                 </div>
 
                 <a href="{{ route('artikel') }}" class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700">
-                    <i class="bx bx-left-arrow-alt"></i> Kembali ke daftar artikel
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke daftar artikel
                 </a>
             </article>
 

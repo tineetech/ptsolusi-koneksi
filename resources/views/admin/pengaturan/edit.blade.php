@@ -22,6 +22,7 @@
                 <div>
                     <label for="name" class="block text-sm font-medium text-slate-700">Nama</label>
                     <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required
+                           placeholder="Masukkan nama lengkap"
                            class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
                     @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                 </div>
@@ -29,6 +30,7 @@
                 <div>
                     <label for="email" class="block text-sm font-medium text-slate-700">Email</label>
                     <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required
+                           placeholder="Masukkan alamat email"
                            class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
                     @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                 </div>
@@ -42,19 +44,21 @@
                 <div>
                     <label for="password" class="block text-sm font-medium text-slate-700">Password Baru</label>
                     <input type="password" id="password" name="password" autocomplete="new-password"
+                           placeholder="Masukkan password baru"
                            class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
                     @error('password') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                 </div>
                 <div>
                     <label for="password_confirmation" class="block text-sm font-medium text-slate-700">Konfirmasi Password</label>
                     <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="new-password"
+                           placeholder="Ulangi password baru"
                            class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
                 </div>
             </div>
 
             <button type="submit"
                     class="mt-6 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
-                <i class="bx bx-save text-lg"></i> Simpan Perubahan
+                <i class="fa-solid fa-floppy-disk text-lg"></i> Simpan Perubahan
             </button>
         </form>
     </div>

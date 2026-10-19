@@ -8,11 +8,11 @@
 
     <link rel="icon" type="image/png" href="{{ asset('images/logo-sk4.png') }}">
 
-    {{-- Tailwind CSS (via Vite) --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Tailwind CSS (via CDN) --}}
+    @include('partials.tailwind')
 
-    {{-- Boxicons --}}
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    {{-- Font Awesome --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     @stack('styles')
 </head>
@@ -52,13 +52,14 @@
                     Dashboard
                 </a>
             @else
-                <a href="{{ route('login') }}" class="hidden rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 md:inline-block">
-                    Login
+                <a href="{{ route('kontak') }}" class="hidden items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 md:inline-flex">
+                    Hubungi Kami
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
                 </a>
             @endauth
 
             <button id="menu-toggle" class="rounded-md p-2 text-slate-600 hover:bg-slate-100 md:hidden" aria-label="Buka menu">
-                <i class="bx bx-menu text-2xl"></i>
+                <i class="fa-solid fa-bars text-2xl"></i>
             </button>
         </nav>
 
@@ -80,9 +81,10 @@
                             Dashboard
                         </a>
                     @else
-                        <a href="{{ route('login') }}"
-                           class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-medium text-white transition hover:bg-indigo-700">
-                            Login
+                        <a href="{{ route('kontak') }}"
+                           class="flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-medium text-white transition hover:bg-indigo-700">
+                            <i class="fa-solid fa-phone-volume text-base"></i>
+                            Hubungi Kami
                         </a>
                     @endauth
                 </li>
@@ -98,18 +100,18 @@
         <div class="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-4">
             <div class="md:col-span-2">
                 <div class="flex items-center">
-                    <img src="{{ asset('images/logo-sk1.png') }}" alt="PT Solusi Koneksi"
-                         class="h-12 w-auto rounded-lg bg-white/95 px-3 py-2">
+                    <img src="{{ asset('images/logo-sk8.png') }}" alt="PT Solusi Koneksi"
+                         class="h-12 w-auto">
                 </div>
                 <p class="mt-4 max-w-md text-sm leading-relaxed">
                     Penyedia solusi jaringan, internet, keamanan, dan infrastruktur teknologi informasi
                     untuk perkantoran, kampus, dan industri di seluruh Indonesia.
                 </p>
                 <div class="mt-5 flex gap-3">
-                    <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600"><i class="bx bxl-facebook"></i></a>
-                    <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600"><i class="bx bxl-instagram"></i></a>
-                    <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600"><i class="bx bxl-linkedin"></i></a>
-                    <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600"><i class="bx bxl-youtube"></i></a>
+                    <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-lg transition hover:bg-indigo-600"><i class="fa-brands fa-youtube"></i></a>
                 </div>
             </div>
             <div>
@@ -124,10 +126,10 @@
             <div>
                 <h3 class="text-sm font-semibold text-white">Kontak</h3>
                 <ul class="mt-4 space-y-2 text-sm">
-                    <li class="flex items-start gap-2"><i class="bx bx-map mt-0.5 text-indigo-400"></i> Jl. Raya Pajajaran No. 88 F Kota Bogor 16153</li>
-                    <li class="flex items-start gap-2"><i class="bx bx-phone mt-0.5 text-indigo-400"></i> (021) 1234-5678</li>
-                    <li class="flex items-start gap-2"><i class="bx bx-envelope mt-0.5 text-indigo-400"></i> info@solusikoneksi.id</li>
-                    <li class="flex items-start gap-2"><i class="bx bx-time mt-0.5 text-indigo-400"></i> Senin - Jumat, 08.00 - 17.00 WIB</li>
+                    <li class="flex items-start gap-2"><i class="fa-solid fa-location-dot mt-0.5 text-indigo-400"></i> Jl. Raya Pajajaran No. 88 F Kota Bogor 16153</li>
+                    <li class="flex items-start gap-2"><i class="fa-solid fa-phone mt-0.5 text-indigo-400"></i> (021) 1234-5678</li>
+                    <li class="flex items-start gap-2"><i class="fa-solid fa-envelope mt-0.5 text-indigo-400"></i> info@solusikoneksi.id</li>
+                    <li class="flex items-start gap-2"><i class="fa-regular fa-clock mt-0.5 text-indigo-400"></i> Senin - Jumat, 08.00 - 17.00 WIB</li>
                 </ul>
             </div>
         </div>

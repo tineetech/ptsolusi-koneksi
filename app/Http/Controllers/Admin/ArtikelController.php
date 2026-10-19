@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\UploadsImages;
 use App\Http\Controllers\Controller;
 use App\Models\Artikel;
 use Illuminate\Http\Request;
@@ -9,6 +10,8 @@ use Illuminate\Support\Str;
 
 class ArtikelController extends Controller
 {
+    use UploadsImages;
+
     public function index()
     {
         return view('admin.artikel.index', [
@@ -23,8 +26,9 @@ class ArtikelController extends Controller
 
     public function store(Request $request)
     {
-        $data = $this->validated($request);
+        $data = $request->validate($this->rules());
         $data['slug'] = $this->uniqueSlug($data['judul']);
+        $data['gambar'] = $this->storeImage($request->file('gambar'), 'artikel');
 
         Artikel::create($data);
 
@@ -40,7 +44,15 @@ class ArtikelController extends Controller
 
     public function update(Request $request, Artikel $artikel)
     {
-        $artikel->update($this->validated($request));
+        $data = $request->validate($this->rules(false));
+
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $this->storeImage($request->file('gambar'), 'artikel', $artikel->gambar);
+        } else {
+            unset($data['gambar']);
+        }
+
+        $artikel->update($data);
 
         return redirect()->route('admin.artikel.index')->with('success', 'Artikel berhasil diperbarui.');
     }
@@ -52,17 +64,17 @@ class ArtikelController extends Controller
         return redirect()->route('admin.artikel.index')->with('success', 'Artikel berhasil dihapus.');
     }
 
-    private function validated(Request $request): array
+    private function rules(bool $requireImage = true): array
     {
-        return $request->validate([
+        return [
             'judul' => ['required', 'string', 'max:255'],
             'kategori' => ['required', 'string', 'max:255'],
             'tanggal' => ['required', 'date'],
             'penulis' => ['required', 'string', 'max:255'],
-            'gambar' => ['required', 'string', 'max:2048'],
+            'gambar' => [$requireImage ? 'required' : 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'ringkas' => ['required', 'string'],
             'isi' => ['required', 'string'],
-        ]);
+        ];
     }
 
     private function uniqueSlug(string $judul): string

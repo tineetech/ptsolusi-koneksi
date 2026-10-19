@@ -7,7 +7,7 @@
         <p class="text-sm text-slate-500">Kelola foto dan dokumentasi kegiatan.</p>
         <a href="{{ route('admin.galeri.create') }}"
            class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
-            <i class="bx bx-plus text-lg"></i> Tambah Galeri
+            <i class="fa-solid fa-plus text-lg"></i> Tambah Galeri
         </a>
     </div>
 
@@ -21,7 +21,7 @@
                     <div class="mt-4 flex items-center gap-2">
                         <a href="{{ route('admin.galeri.edit', $item) }}"
                            class="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-600 transition hover:bg-amber-100">
-                            <i class="bx bx-edit"></i> Edit
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
                         </a>
                         <form method="POST" action="{{ route('admin.galeri.destroy', $item) }}"
                               onsubmit="return confirm('Hapus item galeri ini?')">
@@ -29,7 +29,7 @@
                             @method('DELETE')
                             <button type="submit"
                                     class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-100">
-                                <i class="bx bx-trash"></i> Hapus
+                                <i class="fa-solid fa-trash"></i> Hapus
                             </button>
                         </form>
                     </div>
