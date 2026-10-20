@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ArtikelController as AdminArtikelController;
 use App\Http\Controllers\Admin\CmsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
+use App\Http\Controllers\Admin\KlienController;
 use App\Http\Controllers\Admin\LayananController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PesanKontakController;
@@ -32,10 +33,13 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('layanan', LayananController::class)->except('show');
+    Route::resource('klien', KlienController::class)->except('show');
     Route::resource('artikel', AdminArtikelController::class)->except('show');
     Route::resource('galeri', AdminGaleriController::class)->except('show');
 
     Route::resource('pesan', PesanKontakController::class)->only(['index', 'show', 'destroy']);
+    Route::post('pesan/{pesan}/balas', [PesanKontakController::class, 'balas'])->name('pesan.balas');
+    Route::patch('pesan/{pesan}/status', [PesanKontakController::class, 'updateStatus'])->name('pesan.status');
 
     Route::get('/cms', [CmsController::class, 'edit'])->name('cms.edit');
     Route::put('/cms', [CmsController::class, 'update'])->name('cms.update');

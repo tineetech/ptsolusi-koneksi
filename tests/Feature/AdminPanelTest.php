@@ -2,13 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Mail\BalasanPesanKontak;
 use App\Models\Cms;
+use App\Models\Klien;
 use App\Models\PesanKontak;
 use App\Models\Produk;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class AdminPanelTest extends TestCase
@@ -49,7 +52,7 @@ class AdminPanelTest extends TestCase
     {
         $admin = User::where('email', 'admin@gmail.com')->firstOrFail();
 
-        foreach (['/admin', '/admin/layanan', '/admin/layanan/create', '/admin/artikel', '/admin/artikel/create', '/admin/galeri', '/admin/galeri/create', '/admin/pesan', '/admin/cms', '/admin/pengaturan'] as $url) {
+        foreach (['/admin', '/admin/layanan', '/admin/layanan/create', '/admin/klien', '/admin/klien/create', '/admin/artikel', '/admin/artikel/create', '/admin/galeri', '/admin/galeri/create', '/admin/pesan', '/admin/cms', '/admin/pengaturan'] as $url) {
             $this->actingAs($admin)->get($url)->assertOk();
         }
     }
@@ -106,6 +109,131 @@ class AdminPanelTest extends TestCase
         $this->assertDatabaseMissing('pesan_kontak', ['id' => $pesan->id]);
     }
 
+    public function test_admin_bisa_membalas_pesan_kontak(): void
+    {
+        Mail::fake();
+
+        $admin = User::where('email', 'admin@gmail.com')->firstOrFail();
+
+        $pesan = PesanKontak::create([
+            'nama' => 'Andi',
+            'email' => 'andi@example.com',
+            'subjek' => 'Tanya Layanan',
+            'pesan' => 'Apakah tersedia layanan internet dedicated?',
+        ]);
+
+        $this->from('/admin/pesan/'.$pesan->id)
+            ->actingAs($admin)
+            ->post('/admin/pesan/'.$pesan->id.'/balas', [
+                'subjek' => 'Re: Tanya Layanan',
+                'isi' => 'Ya, layanan tersebut tersedia.',
+            ])
+            ->assertRedirect('/admin/pesan/'.$pesan->id);
+
+        Mail::assertSent(BalasanPesanKontak::class, function (BalasanPesanKontak $mail) use ($pesan) {
+            return $mail->hasTo($pesan->email)
+                && $mail->subjekBalasan === 'Re: Tanya Layanan'
+                && $mail->isiBalasan === 'Ya, layanan tersebut tersedia.';
+        });
+
+        $this->assertSame('replied', $pesan->fresh()->status);
+    }
+
+    public function test_admin_bisa_mengubah_status_pesan_kontak(): void
+    {
+        $admin = User::where('email', 'admin@gmail.com')->firstOrFail();
+
+        $pesan = PesanKontak::create([
+            'nama' => 'Sinta',
+            'email' => 'sinta@example.com',
+            'subjek' => 'Pertanyaan',
+            'pesan' => 'Mohon informasi harga.',
+        ]);
+
+        $this->assertSame('pending', $pesan->fresh()->status);
+
+        $this->from('/admin/pesan/'.$pesan->id)
+            ->actingAs($admin)
+            ->patch('/admin/pesan/'.$pesan->id.'/status', ['status' => 'replied'])
+            ->assertRedirect('/admin/pesan/'.$pesan->id);
+
+        $this->assertSame('replied', $pesan->fresh()->status);
+    }
+
+    public function test_admin_bisa_menambah_klien(): void
+    {
+        $admin = User::where('email', 'admin@gmail.com')->firstOrFail();
+        $layanan = Produk::firstOrFail();
+
+        $this->actingAs($admin)->post('/admin/klien', [
+            'layanan_id' => $layanan->id,
+            'nama_client' => 'Dewi Lestari',
+            'nama_perusahaan' => 'PT Maju Bersama',
+            'email' => 'dewi@majubersama.co.id',
+            'no_telephone' => '081234567890',
+            'alamat_perusahaan' => 'Jl. Merdeka No. 1, Bandung',
+            'notes' => 'Tertarik paket internet dedicated.',
+            'status' => 'konsultasi',
+        ])->assertRedirect('/admin/klien');
+
+        $this->assertDatabaseHas('klien', [
+            'nama_client' => 'Dewi Lestari',
+            'nama_perusahaan' => 'PT Maju Bersama',
+            'status' => 'konsultasi',
+        ]);
+    }
+
+    public function test_admin_bisa_memperbarui_klien(): void
+    {
+        $admin = User::where('email', 'admin@gmail.com')->firstOrFail();
+        $layanan = Produk::firstOrFail();
+
+        $klien = Klien::create([
+            'layanan_id' => $layanan->id,
+            'nama_client' => 'Rudi Hartono',
+            'nama_perusahaan' => 'CV Teknologi Nusantara',
+            'email' => 'rudi@teknus.id',
+            'no_telephone' => '081298765432',
+            'alamat_perusahaan' => 'Jl. Asia Afrika No. 8, Bandung',
+            'notes' => 'Konsultasi awal.',
+            'status' => 'proses',
+        ]);
+
+        $this->actingAs($admin)->put('/admin/klien/'.$klien->id, [
+            'layanan_id' => $layanan->id,
+            'nama_client' => 'Rudi Hartono',
+            'nama_perusahaan' => 'CV Teknologi Nusantara',
+            'email' => 'rudi@teknus.id',
+            'no_telephone' => '081298765432',
+            'alamat_perusahaan' => 'Jl. Asia Afrika No. 8, Bandung',
+            'notes' => 'Sudah deal.',
+            'status' => 'terjual',
+        ])->assertRedirect('/admin/klien');
+
+        $this->assertSame('terjual', $klien->fresh()->status);
+    }
+
+    public function test_admin_bisa_menghapus_klien(): void
+    {
+        $admin = User::where('email', 'admin@gmail.com')->firstOrFail();
+        $layanan = Produk::firstOrFail();
+
+        $klien = Klien::create([
+            'layanan_id' => $layanan->id,
+            'nama_client' => 'Joko Prasetyo',
+            'nama_perusahaan' => 'PT Bina Sarana',
+            'email' => 'joko@binasarana.id',
+            'no_telephone' => '081377665544',
+            'alamat_perusahaan' => 'Jl. Pemuda No. 21, Semarang',
+            'notes' => null,
+            'status' => 'proses',
+        ]);
+
+        $this->actingAs($admin)->delete('/admin/klien/'.$klien->id)->assertRedirect('/admin/klien');
+
+        $this->assertDatabaseMissing('klien', ['id' => $klien->id]);
+    }
+
     public function test_admin_bisa_menambah_layanan(): void
     {
         $admin = User::where('email', 'admin@gmail.com')->firstOrFail();
@@ -151,6 +279,31 @@ class AdminPanelTest extends TestCase
         $this->assertSame('Bekerja cepat', $profil['nilai'][1]['deskripsi']);
 
         @unlink(public_path($profil['tentang']['gambar']));
+    }
+
+    public function test_admin_bisa_memperbarui_logo_perusahaan(): void
+    {
+        $admin = User::where('email', 'admin@gmail.com')->firstOrFail();
+
+        $this->actingAs($admin)->put('/admin/cms', [
+            'tentang_judul' => 'Judul Baru',
+            'tentang_isi' => 'Isi profil baru.',
+            'visi' => 'Visi baru',
+            'misi' => 'Misi baru',
+            'logo_favicon' => UploadedFile::fake()->image('favicon.png'),
+            'logo_primary' => UploadedFile::fake()->image('logo-primary.png'),
+            'logo_white' => UploadedFile::fake()->image('logo-white.png'),
+        ])->assertRedirect('/admin/cms');
+
+        $logo = Cms::branding();
+
+        $this->assertStringStartsWith('images/logo/', $logo['favicon']);
+        $this->assertStringStartsWith('images/logo/', $logo['primary']);
+        $this->assertStringStartsWith('images/logo/', $logo['white']);
+
+        foreach ($logo as $path) {
+            @unlink(public_path($path));
+        }
     }
 
     public function test_admin_bisa_memperbarui_informasi_profil(): void

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
+    @php $branding = \App\Models\Cms::branding(); @endphp
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="@yield('meta_description', 'PT Solusi Koneksi - Penyedia solusi jaringan, internet, dan infrastruktur teknologi informasi.')">
     <title>@yield('title', 'Beranda') &middot; PT Solusi Koneksi</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('images/logo-sk4.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset($branding['favicon']) }}">
 
     {{-- Tailwind CSS (via CDN) --}}
     @include('partials.tailwind')
@@ -55,7 +56,7 @@
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
         <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
             <a href="{{ route('home') }}" class="flex items-center">
-                <img src="{{ asset('images/logo-sk1.png') }}" alt="PT Solusi Koneksi" class="h-10 w-auto">
+                <img src="{{ asset($branding['primary']) }}" alt="PT Solusi Koneksi" class="h-10 w-auto">
             </a>
 
             @php
@@ -128,7 +129,7 @@
         <div class="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-4">
             <div class="md:col-span-2">
                 <div class="flex items-center">
-                    <img src="{{ asset('images/logo-sk8.png') }}" alt="PT Solusi Koneksi"
+                    <img src="{{ asset($branding['white']) }}" alt="PT Solusi Koneksi"
                          class="h-12 w-auto">
                 </div>
                 <p class="mt-4 max-w-md text-sm leading-relaxed">

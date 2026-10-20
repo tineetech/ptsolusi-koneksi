@@ -26,6 +26,29 @@ class Cms extends Model
         return is_array($decoded) ? $decoded : $raw;
     }
 
+    public static function branding(): array
+    {
+        $default = [
+            'favicon' => 'images/logo-sk4.png',
+            'primary' => 'images/logo-sk1.png',
+            'white' => 'images/logo-sk8.png',
+        ];
+
+        $tersimpan = static::query()
+            ->whereIn('key', ['logo.favicon', 'logo.primary', 'logo.white'])
+            ->pluck('value', 'key');
+
+        $logo = [];
+
+        foreach ($default as $jenis => $defaultPath) {
+            $nilai = $tersimpan->get('logo.'.$jenis);
+
+            $logo[$jenis] = is_string($nilai) && trim($nilai) !== '' ? $nilai : $defaultPath;
+        }
+
+        return $logo;
+    }
+
     public static function profil(): array
     {
         $nilai = [];

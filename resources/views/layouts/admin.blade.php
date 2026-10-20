@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="id" class="h-full">
 <head>
+    @php $branding = \App\Models\Cms::branding(); @endphp
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard') &middot; Admin PT Solusi Koneksi</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/logo-sk4.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset($branding['favicon']) }}">
     @include('partials.tailwind')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     @stack('styles')
@@ -15,13 +16,14 @@
         <aside id="admin-sidebar"
                class="fixed inset-y-0 left-0 z-50 w-64 -translate-x-full transform bg-slate-900 text-slate-300 transition-transform duration-200 md:static md:translate-x-0">
             <div class="flex items-center gap-2 border-b border-slate-800 px-6 py-5">
-                <img src="{{ asset('images/logo-sk8.png') }}" alt="PT Solusi Koneksi" class="h-10 w-auto px-2 py-1">
+                <img src="{{ asset($branding['white']) }}" alt="PT Solusi Koneksi" class="h-10 w-auto px-2 py-1">
             </div>
 
             @php
                 $menu = [
                     ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'fa-solid fa-table-cells-large'],
                     ['label' => 'Layanan', 'route' => 'admin.layanan.index', 'icon' => 'fa-solid fa-box'],
+                    ['label' => 'Data Klien', 'route' => 'admin.klien.index', 'icon' => 'fa-solid fa-users'],
                     ['label' => 'Artikel', 'route' => 'admin.artikel.index', 'icon' => 'fa-regular fa-newspaper'],
                     ['label' => 'Galeri', 'route' => 'admin.galeri.index', 'icon' => 'fa-regular fa-image'],
                     ['label' => 'Pesan Masuk', 'route' => 'admin.pesan.index', 'icon' => 'fa-regular fa-envelope'],

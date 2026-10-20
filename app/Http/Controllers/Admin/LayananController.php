@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
 class LayananController extends Controller
@@ -41,24 +42,8 @@ class LayananController extends Controller
             $angka++;
         }
 
-        $folder = public_path('images/layanan');
-
-        if (! is_dir($folder)) {
-            mkdir($folder, 0775, true);
-        }
-
-        $file = $request->file('gambar');
-        $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-
-        if ($namaFile === '') {
-            $namaFile = 'gambar';
-        }
-
-        $namaFile = $namaFile.'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
-        $file->move($folder, $namaFile);
-
         $data['slug'] = $slug;
-        $data['gambar'] = 'images/layanan/'.$namaFile;
+        $data['gambar'] = $this->simpanGambar($request->file('gambar'));
         $data['fitur'] = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $data['fitur']))));
 
         Produk::create($data);
@@ -87,31 +72,7 @@ class LayananController extends Controller
         $data['fitur'] = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $data['fitur']))));
 
         if ($request->hasFile('gambar')) {
-            $folder = public_path('images/layanan');
-
-            if (! is_dir($folder)) {
-                mkdir($folder, 0775, true);
-            }
-
-            if ($layanan->gambar !== null && str_starts_with($layanan->gambar, 'images/layanan/')) {
-                $fileLama = public_path($layanan->gambar);
-
-                if (is_file($fileLama)) {
-                    unlink($fileLama);
-                }
-            }
-
-            $file = $request->file('gambar');
-            $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-
-            if ($namaFile === '') {
-                $namaFile = 'gambar';
-            }
-
-            $namaFile = $namaFile.'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
-            $file->move($folder, $namaFile);
-
-            $data['gambar'] = 'images/layanan/'.$namaFile;
+            $data['gambar'] = $this->simpanGambar($request->file('gambar'), $layanan);
         } else {
             unset($data['gambar']);
         }
@@ -126,5 +87,34 @@ class LayananController extends Controller
         $layanan->delete();
 
         return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil dihapus.');
+    }
+
+    private function simpanGambar(UploadedFile $file, ?Produk $layanan = null): string
+    {
+        $folder = public_path('images/layanan');
+
+        if (! is_dir($folder)) {
+            mkdir($folder, 0775, true);
+        }
+
+        if ($layanan !== null && $layanan->gambar !== null && str_starts_with($layanan->gambar, 'images/layanan/')) {
+            $fileLama = public_path($layanan->gambar);
+
+            if (is_file($fileLama)) {
+                unlink($fileLama);
+            }
+        }
+
+        $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+
+        if ($namaFile === '') {
+            $namaFile = 'gambar';
+        }
+
+        $namaFile = $namaFile.'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+
+        $file->move($folder, $namaFile);
+
+        return 'images/layanan/'.$namaFile;
     }
 }

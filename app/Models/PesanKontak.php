@@ -13,5 +13,6 @@ class PesanKontak extends Model
         'email',
         'subjek',
         'pesan',
+        'status',
     ];
 }

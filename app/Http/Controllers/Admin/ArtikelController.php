@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Artikel;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
 class ArtikelController extends Controller
@@ -42,15 +43,8 @@ class ArtikelController extends Controller
             $angka++;
         }
 
-        $folder = public_path('images/artikel');
-
-        $file = $request->file('gambar');
-        $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) .'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
-
-        $file->move($folder, $namaFile);
-
         $data['slug'] = $slug;
-        $data['gambar'] = 'images/artikel/'.$namaFile;
+        $data['gambar'] = $this->simpanGambar($request->file('gambar'));
 
         Artikel::create($data);
 
@@ -77,22 +71,7 @@ class ArtikelController extends Controller
         ]);
 
         if ($request->hasFile('gambar')) {
-            $folder = public_path('images/artikel');
-
-            if ($artikel->gambar !== null && str_starts_with($artikel->gambar, 'images/artikel/')) {
-                $fileLama = public_path($artikel->gambar);
-
-                if (is_file($fileLama)) {
-                    unlink($fileLama);
-                }
-            }
-
-            $file = $request->file('gambar');
-            $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
-
-            $file->move($folder, $namaFile);
-
-            $data['gambar'] = 'images/artikel/'.$namaFile;
+            $data['gambar'] = $this->simpanGambar($request->file('gambar'), $artikel);
         } else {
             unset($data['gambar']);
         }
@@ -107,5 +86,28 @@ class ArtikelController extends Controller
         $artikel->delete();
 
         return redirect()->route('admin.artikel.index')->with('success', 'Artikel berhasil dihapus.');
+    }
+
+    private function simpanGambar(UploadedFile $file, ?Artikel $artikel = null): string
+    {
+        $folder = public_path('images/artikel');
+
+        if (! is_dir($folder)) {
+            mkdir($folder, 0775, true);
+        }
+
+        if ($artikel !== null && $artikel->gambar !== null && str_starts_with($artikel->gambar, 'images/artikel/')) {
+            $fileLama = public_path($artikel->gambar);
+
+            if (is_file($fileLama)) {
+                unlink($fileLama);
+            }
+        }
+
+        $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+
+        $file->move($folder, $namaFile);
+
+        return 'images/artikel/'.$namaFile;
     }
 }

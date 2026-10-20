@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Cms;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
 class CmsController extends Controller
@@ -13,6 +14,7 @@ class CmsController extends Controller
     {
         return view('pages.admin.cms.edit', [
             'profil' => Cms::profil(),
+            'logo' => Cms::branding(),
         ]);
     }
 
@@ -22,6 +24,9 @@ class CmsController extends Controller
             'tentang_judul' => ['required', 'string'],
             'tentang_isi' => ['required', 'string'],
             'tentang_gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'logo_favicon' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp,svg', 'max:2048'],
+            'logo_primary' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp,svg', 'max:2048'],
+            'logo_white' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp,svg', 'max:2048'],
             'visi' => ['required', 'string'],
             'misi' => ['required', 'string'],
             'nilai_judul' => ['nullable', 'array'],
@@ -33,22 +38,18 @@ class CmsController extends Controller
         $gambar = Cms::profil()['tentang']['gambar'];
 
         if ($request->hasFile('tentang_gambar')) {
-            $folder = public_path('images/profil');
+            $gambar = $this->simpanGambar($request->file('tentang_gambar'), $gambar);
+        }
 
-            if ($gambar !== null && str_starts_with($gambar, 'images/profil/')) {
-                $fileLama = public_path($gambar);
+        $logo = Cms::branding();
 
-                if (is_file($fileLama)) {
-                    unlink($fileLama);
-                }
+        foreach (['favicon' => 'logo_favicon', 'primary' => 'logo_primary', 'white' => 'logo_white'] as $jenis => $field) {
+            if (! $request->hasFile($field)) {
+                continue;
             }
 
-            $file = $request->file('tentang_gambar');
-            $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
-
-            $file->move($folder, $namaFile);
-
-            $gambar = 'images/profil/'.$namaFile;
+            $path = $this->simpanLogo($request->file($field), $logo[$jenis]);
+            Cms::updateOrCreate(['key' => 'logo.'.$jenis], ['value' => $path]);
         }
 
         Cms::updateOrCreate(['key' => 'profil.tentang.judul'], ['value' => $data['tentang_judul']]);
@@ -79,5 +80,51 @@ class CmsController extends Controller
         }
 
         return redirect()->route('admin.cms.edit')->with('success', 'Konten profil berhasil diperbarui.');
+    }
+
+    private function simpanGambar(UploadedFile $file, ?string $gambarLama = null): string
+    {
+        $folder = public_path('images/profil');
+
+        if (! is_dir($folder)) {
+            mkdir($folder, 0775, true);
+        }
+
+        if ($gambarLama !== null && str_starts_with($gambarLama, 'images/profil/')) {
+            $fileLama = public_path($gambarLama);
+
+            if (is_file($fileLama)) {
+                unlink($fileLama);
+            }
+        }
+
+        $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+
+        $file->move($folder, $namaFile);
+
+        return 'images/profil/'.$namaFile;
+    }
+
+    private function simpanLogo(UploadedFile $file, ?string $logoLama = null): string
+    {
+        $folder = public_path('images/logo');
+
+        if (! is_dir($folder)) {
+            mkdir($folder, 0775, true);
+        }
+
+        if ($logoLama !== null && str_starts_with($logoLama, 'images/logo/')) {
+            $fileLama = public_path($logoLama);
+
+            if (is_file($fileLama)) {
+                unlink($fileLama);
+            }
+        }
+
+        $namaFile = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'-'.uniqid().'.'.strtolower($file->getClientOriginalExtension());
+
+        $file->move($folder, $namaFile);
+
+        return 'images/logo/'.$namaFile;
     }
 }

@@ -5,12 +5,23 @@
 @section('content')
     <div class="mx-auto max-w-3xl">
         <div class="mb-6 rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 text-sm text-indigo-700">
-            <i class="fa-solid fa-circle-info"></i> Halaman ini hanya untuk mengubah konten bagian <strong>Profil Perusahaan</strong>.
+            <i class="fa-solid fa-circle-info"></i> Halaman ini untuk mengubah logo perusahaan, favicon, dan konten bagian <strong>Profil Perusahaan</strong>.
         </div>
 
         <form method="POST" action="{{ route('admin.cms.update') }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
+
+            <div class="rounded-2xl border border-slate-200 bg-white p-8">
+                <h2 class="text-lg font-bold text-slate-900">Logo &amp; Favicon</h2>
+                <p class="mt-1 text-sm text-slate-500">Logo baru akan dipakai di navbar, footer, sidebar admin, dan favicon website. Biarkan kosong jika tidak ingin mengubah.</p>
+
+                <div class="mt-5 grid gap-5 md:grid-cols-3">
+                    <x-image-input name="logo_favicon" label="Logo Favicon" :current="$logo['favicon']" />
+                    <x-image-input name="logo_primary" label="Logo Perusahaan (Primary Color)" :current="$logo['primary']" />
+                    <x-image-input name="logo_white" label="Logo Perusahaan (White Color)" :current="$logo['white']" />
+                </div>
+            </div>
 
             <div class="rounded-2xl border border-slate-200 bg-white p-8">
                 <h2 class="text-lg font-bold text-slate-900">Tentang Kami</h2>

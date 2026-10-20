@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        @php $branding = \App\Models\Cms::branding(); @endphp
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Login Admin &middot; PT Solusi Koneksi</title>
+
+        <link rel="icon" type="image/png" href="{{ asset($branding['favicon']) }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -21,7 +24,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
             <div>
                 <a href="/">
-                    <img src="{{ asset('images/logo-sk1.png') }}" alt="PT Solusi Koneksi" class="h-14 w-auto">
+                    <img src="{{ asset($branding['primary']) }}" alt="PT Solusi Koneksi" class="h-14 w-auto">
                 </a>
             </div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class PengaturanController extends Controller
@@ -11,7 +12,7 @@ class PengaturanController extends Controller
     public function edit()
     {
         return view('pages.admin.pengaturan.edit', [
-            'user' => auth()->user(),
+            'user' => Auth::user(),
         ]);
     }
 
